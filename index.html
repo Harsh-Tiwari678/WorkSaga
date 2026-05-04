@@ -1,48 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>WorkSaga</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillMap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+<script src="script.js" defer></script>
 </head>
 <body>
 
-  <!-- 1. NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">work<span><i>Saga</i></span></div>
-    <ul class="nav-links">
-      <li><a href="#">How it works</a></li>
-      <li><a href="#">GitHub ↗</a></li>
-    </ul>
-  </nav>
+<!-- NAV -->
+<nav>
+  <div class="logo">Skill<span>Map</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#skillgap">Skill Gap</a>
+    <a href="#how">How it works</a>
+    <a href="https://github.com" target="_blank">GitHub ↗</a>
+  </div>
+</nav>
 
-  <!-- 2. HERO SECTION -->
-  <section class="hero">
-    <p class="tag">AI-POWERED ·</p>
-    <h1>Know what the <br><span class="italic">market wants.</span></h1>
-    <p class="subtext">Real-time analysis of 75+ job postings weekly.</p>
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">AI-powered · Live every Monday</p>
+  <h1>Know what the<br>market <em>wants.</em></h1>
+  <p class="hero-sub">Real-time analysis of 75+ job postings weekly. Powered by Groq AI.</p>
 
-    <div class="search-bar">
-      <input type="text" placeholder="Frontend Developer, ML Engineer, DevOps...">
-      <button>Analyze →</button>
+  <div class="search-wrap">
+    <div class="search-box">
+      <input id="roleInput" type="text" placeholder="Frontend Developer, ML Engineer, DevOps..."/>
+      <button onclick="doSearch()">Analyze →</button>
     </div>
+    <p class="error-msg" id="errorMsg">Could not connect. Check your n8n webhook.</p>
+  </div>
 
-    <div class="chips">
-      <span>Frontend Developer</span>
-      <span>Backend Engineer</span>
-      <span>DevOps Engineer</span>
-      <span>AI Engineer</span>
-      <span>Full Stack</span>
+  <div class="pills">
+    <div class="pill" onclick="doSearch('Frontend Developer')">Frontend Developer</div>
+    <div class="pill" onclick="doSearch('Backend Engineer')">Backend Engineer</div>
+    <div class="pill" onclick="doSearch('DevOps Engineer')">DevOps Engineer</div>
+    <div class="pill" onclick="doSearch('AI Engineer')">AI Engineer</div>
+    <div class="pill" onclick="doSearch('Full Stack Developer')">Full Stack</div>
+  </div>
+
+  <div class="hero-stats">
+    <div><div class="hstat-num">75+</div><div class="hstat-label">Jobs weekly</div></div>
+    <div><div class="hstat-num">5</div><div class="hstat-label">Roles tracked</div></div>
+    <div><div class="hstat-num">12</div><div class="hstat-label">AI signals</div></div>
+    <div><div class="hstat-num">₹0</div><div class="hstat-label">Cost</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">Razorpay</span><span class="marquee-item">Zepto</span>
+    <span class="marquee-item">CRED</span><span class="marquee-item">Postman</span>
+    <span class="marquee-item">Swiggy</span><span class="marquee-item">Meesho</span>
+    <span class="marquee-item">PhonePe</span><span class="marquee-item">Groww</span>
+    <span class="marquee-item">Freshworks</span><span class="marquee-item">BrowserStack</span>
+    <span class="marquee-item">Razorpay</span><span class="marquee-item">Zepto</span>
+    <span class="marquee-item">CRED</span><span class="marquee-item">Postman</span>
+    <span class="marquee-item">Swiggy</span><span class="marquee-item">Meesho</span>
+    <span class="marquee-item">PhonePe</span><span class="marquee-item">Groww</span>
+    <span class="marquee-item">Freshworks</span><span class="marquee-item">BrowserStack</span>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading" id="loading">
+  <div class="loading-line"></div>
+  <p id="loadTxt">Fetching live jobs...</p>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-header">
+    <h2 class="results-title" id="resultsTitle"></h2>
+    <p class="results-sub" id="resultsSub"></p>
+  </div>
+
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="two-col">
+    <div class="col-panel">
+      <p class="panel-label">Skills in demand</p>
+      <div class="skills-cloud" id="skillsCloud"></div>
     </div>
-  </section>
+    <div class="col-panel">
+      <p class="panel-label">Skill frequency</p>
+      <div class="trend-rows" id="trendRows"></div>
+    </div>
+  </div>
 
-  <!-- 3. STATS SECTION -->
-  <section class="stats">
-    <div class="stat"><h2>75+</h2><p>Jobs weekly</p></div>
-    <div class="stat"><h2>5</h2><p>Roles tracked</p></div>
-    <div class="stat"><h2>12</h2><p>AI signals</p></div>
-    <div class="stat"><h2>₹0</h2><p>Cost</p></div>
-  </section>
+  <div class="jobs-section">
+    <div class="jobs-label">
+      <span>Job listings</span>
+      <span id="jobCountLabel"></span>
+    </div>
+    <div id="jobsGrid"></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="features-top">
+      <h2 class="features-h">Built for developers<br>who want an <em>edge.</em></h2>
+      <p class="features-desc">Every feature is designed to give you real market intelligence — not just job listings.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat">
+        <div class="feat-num">01</div>
+        <div class="feat-title">Live job data</div>
+        <div class="feat-desc">75+ real job postings fetched every Monday across 5 tech roles. Always current.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-num">02</div>
+        <div class="feat-title">Groq AI extraction</div>
+        <div class="feat-desc">Reads every job description and extracts skills, seniority, salary and remote status.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-num">03</div>
+        <div class="feat-title">Skill trends</div>
+        <div class="feat-desc">Weekly skill frequency data builds over time. See what's rising and what's declining.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-num">04</div>
+        <div class="feat-title">Salary intelligence</div>
+        <div class="feat-desc">Real salary benchmarks for each role pulled from live market data.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-num">05</div>
+        <div class="feat-title">Skill gap analyzer</div>
+        <div class="feat-desc">Enter your skills and instantly see how you match against current market demand.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-num">06</div>
+        <div class="feat-title">Weekly digest</div>
+        <div class="feat-desc">Subscribe for a weekly email report. Every Monday, full market intelligence in your inbox.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILL GAP -->
+<section class="gap-section" id="skillgap">
+  <div class="gap-inner">
+    <p class="gap-label">Skill gap analyzer</p>
+    <h2 class="gap-h">See how you<br><em>stack up.</em></h2>
+    <div class="gap-input-group">
+      <label class="gap-input-label">Your skills</label>
+      <input class="gap-input" id="mySkills" placeholder="React, JavaScript, CSS, Git..." oninput="runGap()"/>
+    </div>
+    <div class="gap-result" id="gapResult">
+      <div class="gap-score-row">
+        <div class="gap-score" id="gapScore">—</div>
+        <div>
+          <div class="gap-verdict" id="gapVerdict">—</div>
+          <div class="gap-detail" id="gapDetail"></div>
+        </div>
+      </div>
+      <div class="gap-cols">
+        <div>
+          <div class="gap-col-label">Skills you have</div>
+          <div id="haveList"></div>
+        </div>
+        <div>
+          <div class="gap-col-label">Skills to learn</div>
+          <div id="missList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <h2 class="how-h">How it <em>works.</em></h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-n">01</div>
+        <div class="how-step-title">Search any role</div>
+        <div class="how-step-desc">Type any tech role or pick a preset. Works for any job title in any market.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-n">02</div>
+        <div class="how-step-title">AI reads 75+ jobs</div>
+        <div class="how-step-desc">Groq LLaMA reads every job description and extracts structured intelligence instantly.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-n">03</div>
+        <div class="how-step-title">Get real insights</div>
+        <div class="how-step-desc">Skill rankings, salary ranges, remote trends and direct apply links — all in one view.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIGEST -->
+<section class="digest">
+  <div class="digest-inner">
+    <h2 class="digest-h">Get the weekly<br><em>report.</em></h2>
+    <p class="digest-sub">Every Monday morning, full job market intelligence in your inbox. Free forever.</p>
+    <div class="digest-form">
+      <input type="email" id="digestEmail" placeholder="your@email.com"/>
+      <button onclick="subscribe()">Subscribe</button>
+    </div>
+    <p class="digest-ok" id="digestOk">✓ You're in. First report arrives next Monday.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Skill<span>Map</span></div>
+  <div class="footer-stack">
+    <span class="footer-tag">n8n</span>
+    <span class="footer-tag">Groq AI</span>
+    <span class="footer-tag">JSearch API</span>
+    <span class="footer-tag">Google Sheets</span>
+  </div>
+</footer>
 
 </body>
 </html>
