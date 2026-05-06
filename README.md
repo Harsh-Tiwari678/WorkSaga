@@ -1,4 +1,4 @@
-# 🚀 WorkSaga — AI Job Intelligence PipelineWorkSaga is a web application that analyzes job market data using an automated pipeline built with **n8n**, external job APIs, and a frontend dashboard.It fetches job listings, processes them, stores structured data in Google Sheets, and displays insights in a clean UI.---## ✨ Features- 🔍 Search jobs by role (Frontend, Backend, DevOps, etc.)- ⚙️ Automated data pipeline using n8n- 🧠 Data structuring using JavaScript + LLM- 📊 Dynamic job listing display- 📄 Google Sheets as lightweight database- 🔗 Apply button (real link if available, otherwise Google fallback)- ⭐ Save jobs locally (browser storage)---## 🏗️ Architecture
+# 🚀 WorkSaga — AI Job Intelligence PipelineWorkSaga is a web application that analyzes job market data using an automated pipeline built with **n8n**
 ## 🏗️ Architecture
 
 ```
