@@ -1,4 +1,5 @@
-# 🚀 WorkSaga — AI Job Intelligence PipelineWorkSaga is a web application that analyzes job market data using an automated pipeline built with **n8n**
+# 🚀 WorkSaga — AI Job Intelligence Pipeline
+# WorkSaga is a web application that analyzes job market data using an automated pipeline built with **n8n**
 ## 🏗️ Architecture
 
 ```
